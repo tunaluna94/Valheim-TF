@@ -20,7 +20,7 @@ resource "google_compute_instance" "valheim-server" {
     }
   }
 
-  metadata_startup_script = file("/Users/jluna/Desktop/valheimdemo/terraformdemo/valheim-startup.sh")
+  metadata_startup_script = file("$HOME/Desktop/valheim-TF/valheim-startup.sh")
 
 
   network_interface {
