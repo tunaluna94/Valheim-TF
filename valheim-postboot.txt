@@ -1,0 +1,72 @@
+# Install Steamcmd and accept license from sudo user
+sudo apt install steamcmd
+
+# Navigate to the steam user
+sudo -i -u steam bash
+
+# IMPORTANT: Create symbolic link
+#ln -s /usr/games/steamcmd steamcmd
+
+# Add Copy&Paste to create environment variable
+echo export PATH=$PATH:/usr/games >> ~/.bashrc
+
+# From steam user run to install Valheim
+#steamcmd +login anonymous +force_install_dir /home/steam/valheimserver +app_update 896660 validate +exit
+
+# Create dedicated file for your server details
+vi /home/steam/valheimserver/start_valheim.sh
+
+# Copy&Paste into start_valheim.sh, be use to update <NAME> <PASSWORD> with your preferred entries.
+#!/bin/bash
+export templdpath=$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=./linux64:$LD_LIBRARY_PATH
+export SteamAppId=892970
+
+# Tip: Make a local copy of this script to avoid it being overwritten by steam.
+# NOTE: Minimum password length is 5 characters & Password cant be in the server name.
+# NOTE: You need to make sure the ports 2456-2458 is being forwarded to your server through your local router & firewall.
+./valheim_server.x86_64 -name "<NAME>" -port 2456 -nographics -batchmode -world "<NAME>" -password "<PASSWORD>" -public 1
+
+export LD_LIBRARY_PATH=$templdpath
+
+
+# Create a systemd service
+# Navigate back to a sudo user and run the following:
+vi /etc/systemd/system/valheimserver.service
+
+# Copy&Paste into valheimserver.service file
+
+Unit]
+Description=Valheim Server
+Wants=network-online.target
+After=syslog.target network.target nss-lookup.target network-online.target
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+User=steam
+Group=steam
+ExecStartPre=/home/steam/steamcmd +login anonymous +force_install_dir /home/steam/valheimserver +app_update 896660 validate +exit
+ExecStart=/home/steam/valheimserver/start_valheim.sh
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s INT $MAINPID
+WorkingDirectory=/home/steam/valheimserver
+LimitNOFILE=100000
+
+[Install]
+WantedBy=multi-user.target
+
+# Run
+sudo systemctl daemon-reload
+
+# Start valheim server
+sudo systemctl start valheimserver
+
+# Check status of server
+systemctl status valheimserver
+
+# Stop valheim server
+sudo systemctl stop valheimserver
