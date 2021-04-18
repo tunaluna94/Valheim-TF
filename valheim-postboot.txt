@@ -5,7 +5,7 @@ sudo apt install steamcmd
 sudo -i -u steam bash
 
 # IMPORTANT: Create symbolic link
-#ln -s /usr/games/steamcmd steamcmd
+ln -s /usr/games/steamcmd steamcmd
 
 # Add Copy&Paste to create environment variable
 echo export PATH=$PATH:/usr/games >> ~/.bashrc
