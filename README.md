@@ -1,2 +1,2 @@
 # Valheim-TF
-Terraform deployment for Valheim
+Terraform module for Valheim
