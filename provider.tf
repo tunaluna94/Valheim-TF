@@ -13,6 +13,6 @@ terraform {
 provider "google" {
   region      = var.region[0]
   zone        = var.zone[0]
-  credentials = file("$HOME/Downloads/key.json") #Feel free to use other options like ENV VAR #
+  credentials = file("") #Feel free to use other options like ENV VAR #
   project     = var.project
 }
