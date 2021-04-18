@@ -9,7 +9,7 @@ This Terraform module will create a GCE VM, dedicated service account with restr
 
 On average this takes around 10-15 min to setup
 
-## Utilize the terraform.tfvars <br/>
+## Utilize the terraform.tfvars locally <br/>
 
 This is where you will enter your own variables like GCP project etc
 
